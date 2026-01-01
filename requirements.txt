@@ -16,5 +16,7 @@ protobuf
 googleapis-common-protos
 grpcio
 langchain-groq
+matplotlib
+pygraphviz
 
 # pip install -U 

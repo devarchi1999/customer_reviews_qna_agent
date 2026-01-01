@@ -1,7 +1,5 @@
 #vector db retrieval
-from langchain_pinecone import PineconeVectorStore
 from sentence_transformers import SentenceTransformer
-from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from pinecone.grpc import PineconeGRPC as Pinecone
 import os
 from dotenv import load_dotenv
@@ -44,6 +42,14 @@ class EmbeddingGenerator:
     def generate_embedding(self, text:str) -> list[float]:
         embedding = self.embedding_model.encode([text])[0]
         return embedding
+    
+    
+# if __name__ == "__main__":
+#     retriever = RetrievalWithFilter()
+#     response = retriever.retrieve(query="Great customer service in region1 store2", top_k=5,
+#                                  filter={"region":{"$in":["region1"]},"store":{"$in":["store2"]}})
+#     for match in response['matches']:
+#         print(match['metadata']['review_text'])
         
         
 
