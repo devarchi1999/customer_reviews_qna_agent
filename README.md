@@ -2,8 +2,6 @@
 
 This repository implements a **Role-Based Retrieval-Augmented Generation (RAG) agent** for retail organizations. The system delivers **role-aware, data-grounded customer insights** by combining semantic search, Large Language Models (LLMs), and agentic orchestration.
 
-The design is based on the dissertation *Application of Agentic AI in Retail*, focusing on system components, workflows, and technical specifications (pages 3–8).
-
 ---
 
 ## Key Features
@@ -12,7 +10,6 @@ The design is based on the dissertation *Application of Agentic AI in Retail*, f
 - Retrieval-Augmented Generation to reduce hallucinations
 - Metadata-driven access control and filtering
 - Stateful, graph-based agent orchestration
-- Enterprise-ready, scalable architecture
 
 ---
 
@@ -20,7 +17,7 @@ The design is based on the dissertation *Application of Agentic AI in Retail*, f
 
 - **Data Ingestion & Preprocessing**
   - Cleans and normalizes customer reviews and feedback
-  - Enriches data with metadata (store, region, sentiment, source)
+  - Enriches data with metadata (store, region, sentiment)
 
 - **Vector Database**
   - Stores embeddings with metadata
@@ -34,7 +31,6 @@ The design is based on the dissertation *Application of Agentic AI in Retail*, f
 - **Agent**
   - Acts as the orchestration layer
   - Handles query routing, interaction state, and role logic
-  - Supports multi-turn conversations
 
 - **Role Definition**
   - Maps organizational roles to:
@@ -45,11 +41,13 @@ The design is based on the dissertation *Application of Agentic AI in Retail*, f
 ---
 
 ## Architecture Overview
+<img width="3244" height="1444" alt="image" src="https://github.com/user-attachments/assets/96b64cab-818e-4217-b129-e76d261525ce" />
+
 
 ### End-to-End Flow
 
 1. User submits a natural language query  
-2. Agent identifies the user’s role  
+2. Agent identifies the user’s role, sentiment, region, store (if provided)
 3. RAG retrieves role-filtered context from the vector database  
 4. LLM generates a grounded, role-specific response  
 5. Output is returned in an appropriate format and abstraction level  
@@ -57,6 +55,8 @@ The design is based on the dissertation *Application of Agentic AI in Retail*, f
 ---
 
 ### Agent Routing Logic
+<img width="1227" height="516" alt="image" src="https://github.com/user-attachments/assets/42011f48-a643-4b2b-bea9-9e3f22e9164c" />
+
 
 - **Store Manager Node**
   - Store-level issues, customer complaints, actionable insights
@@ -68,6 +68,8 @@ The design is based on the dissertation *Application of Agentic AI in Retail*, f
   - Strategic insights, brand perception, retention trends
 
 All nodes invoke the same RAG pipeline with role-adapted parameters.
+<img width="1340" height="296" alt="image" src="https://github.com/user-attachments/assets/f2d1b5f7-cc7f-47f8-bb91-e7c10e9140e0" />
+
 
 ---
 
