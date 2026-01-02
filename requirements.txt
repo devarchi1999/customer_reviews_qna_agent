@@ -1,0 +1,22 @@
+sentence-transformers
+# pytorch
+transformers[torch]
+numpy
+pandas
+langchain
+langgraph
+# chromadb
+langchain-core
+langchain-huggingface
+langchain-pinecone
+pinecone
+python-dotenv
+tqdm
+protobuf
+googleapis-common-protos
+grpcio
+langchain-groq
+matplotlib
+pygraphviz
+
+# pip install -U 
