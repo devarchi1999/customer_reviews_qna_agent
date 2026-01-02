@@ -41,7 +41,8 @@ This repository implements a **Role-Based Retrieval-Augmented Generation (RAG) a
 ---
 
 ## Architecture Overview
-<img width="3244" height="1444" alt="image" src="https://github.com/user-attachments/assets/96b64cab-818e-4217-b129-e76d261525ce" />
+<img width="622" height="306" alt="image" src="https://github.com/user-attachments/assets/9f073335-ecce-490f-a756-ba2a24f0ab64" />
+
 
 
 ### End-to-End Flow
