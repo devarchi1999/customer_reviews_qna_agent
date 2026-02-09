@@ -18,5 +18,6 @@ grpcio
 langchain-groq
 matplotlib
 pygraphviz
+streamlit
 
 # pip install -U 
