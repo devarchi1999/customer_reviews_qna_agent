@@ -1,5 +1,5 @@
-from utils.prompts import router_prompt, regional_manager_prompt, store_manager_prompt, executive_manager_prompt
-from utils.state import State, RoleClassification, StructuredResponse
+from utils.prompts import router_prompt, regional_manager_prompt, store_manager_prompt, executive_manager_prompt, summary_prompt
+from utils.state import State, RoleClassification, StructuredResponse, SummaryResponse, Status
 from langchain_groq import ChatGroq
 import os 
 from dotenv import load_dotenv
@@ -21,7 +21,6 @@ def get_inputs_from_query(state: State) -> State:
     
     prompt = [("system", router_prompt),("human", query),]
     response = llm_for_role_classification.invoke(prompt)
-
     
     return {'role': response['role'],
             'region': response['region'],
@@ -36,7 +35,7 @@ def router(state: State) -> Literal['Executive Manager', 'Store Manager', 'Regio
 
     
     
-def run_regional_manager(state: State) -> StructuredResponse:
+def run_regional_manager(state: State) -> State:
     """
     Executes the Regional Manager role to answer the query using RAG approach.
     """
@@ -71,6 +70,7 @@ def run_regional_manager(state: State) -> StructuredResponse:
     #alternative store value for llm response
     if store == []:
         store = "all_stores"
+        state['store'] = store
     
     prompt_template = f'''User Query: {query}\n\n
                           Context: {context}\n\n
@@ -82,14 +82,15 @@ def run_regional_manager(state: State) -> StructuredResponse:
     prompt = [("system", regional_manager_prompt),
               ("human", prompt_template),]
     response = llm_for_regional_manager.invoke(prompt) 
-
+    state['response'] = response['answer']
     print(prompt_template)
     print(response)
 
-    return response
+    # return response
+    return state
     
     
-def run_store_manager(state: State) -> StructuredResponse:
+def run_store_manager(state: State) -> State:
     """
     Executes the Store Manager role to answer the query using RAG approach.
     """
@@ -125,6 +126,7 @@ def run_store_manager(state: State) -> StructuredResponse:
     #alternative region value for llm response
     if region == []:
         region = "no_region_specified"
+        state['region'] = region
     
     prompt_template = f'''User Query: {query}\n\n
                           Context: {context}\n\n
@@ -137,14 +139,15 @@ def run_store_manager(state: State) -> StructuredResponse:
               ("human", prompt_template),]
     
     response = llm_for_store_manager.invoke(prompt)
+    state['response'] = response['answer']
 
     print(prompt_template)
     print(response)
     
-    return response
+    return state
 
 
-def run_executive_manager(state: State) -> StructuredResponse:
+def run_executive_manager(state: State) -> State:
     """
     Executes the Executive role to answer the query using RAG approach.
     """
@@ -179,8 +182,10 @@ def run_executive_manager(state: State) -> StructuredResponse:
     #alternative store & region value for llm response
     if store == []:
         store = "all_stores"
+        state['store'] = store
     if region == []:
         region = "all_regions"
+        state['region'] = region
     
     prompt_template = f'''User Query: {query}\n\n
                           Context: {context}\n\n
@@ -190,12 +195,42 @@ def run_executive_manager(state: State) -> StructuredResponse:
                           sentiment: {sentiment}'''
     
     
-    prompt = [("system", regional_manager_prompt),
+    prompt = [("system", executive_manager_prompt),
               ("human", prompt_template),]
     
     response = llm_for_executive_manager.invoke(prompt)
-
+    state['response'] = response['answer']
     print(prompt_template)
     print(response)
     
-    return response
+    return state
+
+def run_summary_node(state:State) -> State:
+    """
+    Executes the summary node to provide a concise summary of customer reviews based on the query.
+    """
+    query = state['query']
+    response = state['response']
+    role = state['role']
+    region = state['region']
+    store = state['store']
+    sentiment = state['sentiment']
+    print('response from previous node', response)
+    llm_for_summary = llm.with_structured_output(SummaryResponse)
+    prompt_template = f'''User Query: {query}\n\n
+                          Initial Response: {response}\n\n
+                          Role: {role}\n\n
+                          Region: {region}\n\n
+                          Store: {store}\n\n
+                          Sentiment: {sentiment}'''
+    
+    prompt = [("system", summary_prompt),
+              ("human", prompt_template),]
+    print(prompt_template)
+    # print(response)
+    response = llm_for_summary.invoke(prompt)
+    state['response'] = response['answer']
+    # print(prompt_template)
+    print(response)
+    
+    return state

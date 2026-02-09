@@ -1,5 +1,9 @@
 from typing_extensions import Literal, TypedDict, Any
 
+class Status(TypedDict):
+    status: Literal['success', 'error']
+    message: str
+
 
 class State(TypedDict):
     query: str
@@ -9,6 +13,7 @@ class State(TypedDict):
     store: str
     retrieval_tool: Any
     embedding_generator: Any
+    response: Any
     
 class RoleClassification(TypedDict):
     role: Literal['Executive Manager', 'Store Manager', 'Regional Manager']
@@ -23,3 +28,6 @@ class StructuredResponse(TypedDict):
     sentiment: str
     answer: str
     supporting_facts: list[str]
+
+class SummaryResponse(TypedDict):
+    answer: str
